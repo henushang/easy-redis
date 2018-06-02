@@ -16,6 +16,9 @@
 本功能相关的方法为 EasyRedisCluster 中的 lpush/rpush/lpop/rpop
 
 
+# 后期规划
+自动检测Redis的连接，防止单片redis 宕机导致整个服务不可用
+
 
 # 联系方式
   email: henushang@qq.com
