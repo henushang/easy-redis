@@ -1,2 +1,2 @@
 # easy-redis
-封装redis操作方法
+本项目封装Redis客户端，以提供最简洁的redis操作方式
