@@ -10,14 +10,31 @@ import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
+/**
+ *
+ * 本类的初始化方法为：EasyRedisCluster easyCluster = new EasyRedisCluster("127.0.0.1:1111,127.0.0.1:2222");
+ * <br />
+ * 内部使用ShardedJedisPool来管理连接，暂不对外提供修改接口，使用默认的配置。
+ *
+ */
 public class EasyRedisCluster {
 
     private ShardedJedisPool shardedJedisPool = null;
 
+    /**
+     * 类的实例化方式，支持使用字符串类型来描述具体的 redis 的 ip:port
+     * @param addressInfo ip1:port1,ip2:port2
+     */
     public EasyRedisCluster(String addressInfo) {
         initPool(getJedisShardInfoList(addressInfo));
     }
 
+    /**
+     * 随机选择一个Redis实例，把数据放进去
+     * @param key
+     * @param values
+     * @return
+     */
     public boolean lpush(String key, String... values) {
         ShardedJedis shardedJedis = getShardedJedis();
         Jedis jedis = getRandomJedis(shardedJedis);
@@ -26,6 +43,12 @@ public class EasyRedisCluster {
         return re > 0;
     }
 
+    /**
+     * 随机选择一个Redis实例，把数据放进去
+     * @param key
+     * @param values
+     * @return
+     */
     public boolean rpush(String key, String... values) {
         ShardedJedis shardedJedis = getShardedJedis();
         Jedis jedis = getRandomJedis(shardedJedis);
@@ -34,6 +57,12 @@ public class EasyRedisCluster {
         return re > 0;
     }
 
+    /**
+     * 从多个redis分片中取数据
+     * @param key
+     * @param numPerShard 每一个分片中单次取出的数据量
+     * @return
+     */
     public List<String> lpop(String key, Integer numPerShard) {
         ShardedJedis shardedJedis = getShardedJedis();
         List<Jedis> allShard = new ArrayList<Jedis>(shardedJedis.getAllShards());
@@ -52,6 +81,12 @@ public class EasyRedisCluster {
         return result;
     }
 
+    /**
+     * 从多个redis分片中取数据
+     * @param key
+     * @param numPerShard 每一个分片中单次取出的数据量
+     * @return
+     */
     public List<String> rpop(String key, Integer numPerShard) {
         ShardedJedis shardedJedis = getShardedJedis();
         List<Jedis> allShard = new ArrayList<Jedis>(shardedJedis.getAllShards());
